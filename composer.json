@@ -1,0 +1,39 @@
+{
+    "name": "infinety/calendar",
+    "description": "Full calendar events module for Laravel",
+    "keywords": [
+        "Laravel",
+        "fullcalendar",
+        "events",
+        "calendar"
+    ],
+    "homepage": "https://github.com/krato/calendar",
+    "license": "MIT",
+    "require": {
+        "php": ">=5.5.9",
+        "laravel/framework": "~5.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "4.8.24"
+    },
+    "authors": [
+        {
+            "name": "Eric Lagarda",
+            "email": "eric@infinety.es"
+        },
+        {
+            "name": "Todor Todorov",
+            "email": "todstoychev@gmail.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Infinety\\Calendar\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Infinety\\Calendar\\Tests\\": "tests/"
+        }
+    }
+}
