@@ -29,15 +29,33 @@ class CalendarServiceProvider extends ServiceProvider
         $this->loadTranslationsFrom(__DIR__ . '/../resources/lang/', 'calendar-events');
 
         $this->loadViewsFrom(__DIR__ . '/../resources/views/', 'calendar-events');
+        /*
+         * Views
+         */
+        $this->publishes([
+            __DIR__ . '/../database/migrations/' => database_path('migrations/'),
+        ], 'migrations');
 
-        $this->publishes(
-            [
-                __DIR__ . '/../database/migrations/' => database_path('migrations/'),
-                __DIR__ . '/../resources/lang/' => base_path('resources/lang/'),
-                __DIR__ . '/../resources/views/' => base_path('resources/vendor/calendar-events/'),
-                __DIR__ . '/../public/js/' => public_path('/js/'),
-            ]
-        );
+        /*
+         * Views
+         */
+        $this->publishes([
+            __DIR__ . '/../resources/lang/' => base_path('resources/lang/'),
+        ], 'lang');
+
+        /*
+         * Views
+         */
+        $this->publishes([
+            __DIR__ . '/../resources/views/' => base_path('resources/views/vendor/infinety/calendar'),
+        ], 'views');
+
+        /*
+         * Javascripts
+         */
+        $this->publishes([
+            __DIR__ . '/../public/' => public_path('calendar_assets'),
+        ], 'public');
 
         /**
          * Publish config file

@@ -19,9 +19,10 @@ class CreateCalendarEventsTable extends Migration
             $table->dateTime('start');
             $table->dateTime('end')->nullable();
             $table->boolean('all_day')->nullable();
-            $table->string('border_color', 7)->nullable();
-            $table->string('background_color', 7)->nullable();
-            $table->string('text_color', 7)->nullable();
+            $table->boolean('repeat_week')->nullable()->default(0);
+            $table->string('class', 50)->nullable();
+            $table->dateTime('repeat_event_end')->nullable();
+            $table->integer('model_id')->unsigned();
             $table->timestamps();
         });
     }

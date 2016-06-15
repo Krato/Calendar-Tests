@@ -29,7 +29,8 @@ class Events extends Model
         'all_day',
         'repeat_week',
         'class',
-        'repeat_event_end'
+        'repeat_event_end',
+        'model_id'
     ];
 
     function color(){

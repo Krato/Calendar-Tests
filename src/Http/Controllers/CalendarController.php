@@ -28,7 +28,7 @@ class CalendarController extends Controller
         $colorModel = new EventsModelsColor;
         $modelData = app(config('calendar.modelBind'))->get();
         $modelColumn = config('calendar.modelColumn', 'name');
-    	return view('calendar.index', compact('modelData', 'modelColumn', 'colorModel'));
+    	return $this->firstViewThatExists('vendor/infinety/calendar/index', 'calendar.index', compact('modelData', 'modelColumn', 'colorModel'));
     }
 
     /**
@@ -40,7 +40,7 @@ class CalendarController extends Controller
         $colorModel = new EventsModelsColor;
         $modelData = app(config('calendar.modelBind'))->get();
         $modelColumn = config('calendar.modelColumn', 'name');
-        return view('calendar.model.index', ['modelForm' => true, 'model' => $modelData, 'modelColumn' => $modelColumn, 'colorModel' => $colorModel]);
+        return $this->firstViewThatExists('vendor/infinety/calendar/model/index', 'calendar.model.index', ['modelForm' => true, 'model' => $modelData, 'modelColumn' => $modelColumn, 'colorModel' => $colorModel]);
     }
 
     /**
@@ -53,7 +53,7 @@ class CalendarController extends Controller
         $colorModel = new EventsModelsColor;
         $modelData = app(config('calendar.modelBind'))->find($modelId);
         $modelColumn = config('calendar.modelColumn', 'name');
-        return view('calendar.create', ['modelForm' => true, 'modelId' => $modelId, 'model' => $modelData, 'modelColumn' => $modelColumn, 'colorModel' => $colorModel]);
+        return $this->firstViewThatExists('vendor/infinety/calendar/create', 'calendar.create', ['modelForm' => true, 'modelId' => $modelId, 'model' => $modelData, 'modelColumn' => $modelColumn, 'colorModel' => $colorModel]);
     }
 
     /**
@@ -136,5 +136,30 @@ class CalendarController extends Controller
      {
          echo $this->calendarService->getAllEventsAsJson($request->get('start'), $request->get('end'));
      }
+
+
+    /**
+     *
+     * Allow replace the default views by placing a view with the same name.
+     * If no such view exists, load the one from the package.
+     *
+     * @param $first_view
+     * @param $second_view
+     * @param array $information
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    protected function firstViewThatExists($first_view, $second_view, $information = [])
+    {
+        // load the first view if it exists, otherwise load the second one
+        if (view()->exists($first_view))
+        {
+
+            return view($first_view, $information);
+        }
+        else
+        {
+            return view($second_view, $information);
+        }
+    }
 
 }

@@ -1,0 +1,185 @@
+.month-picker {
+    display: inline-block;
+    position: absolute;
+    z-index: 9999
+}
+.month-picker table {
+    border-collapse: separate;
+    border-spacing: 2px 2px;
+    
+}
+.month-picker td {
+    padding: 10px;
+
+}
+.month-picker .ui-button-text {
+    padding: .4em 0
+}
+.month-picker-header {
+    margin: 3px 3px 0
+}
+.month-picker-year-table {
+    width: 100%;
+    -ms-user-select: none;
+    -moz-user-select: -moz-none;
+    -khtml-user-select: none;
+    -webkit-user-select: none;
+    user-select: none
+}
+.month-picker-year-table a {
+    border: 1px solid transparent
+}
+.month-picker-year-table .ui-button {
+    font-size: 1.1em;
+    width: 1.5em;
+    height: 1.5em;
+    cursor: default;
+    margin: 0
+
+}
+.month-picker-year-table .month-picker-title {
+    text-align: center
+}
+.month-picker-year-table .month-picker-title .ui-button {
+    font-size: 1em;
+    padding: .1em 0;
+    width: 100%;
+    font-weight: 700
+
+}
+.month-picker-year-table .ui-button-text {
+    padding: 0
+}
+.month-picker-month-table td {
+    height: 35px;
+    width: 25%;
+    text-align: center;
+    padding: 10px 8px;
+}
+.month-picker-month-table .ui-button {
+    background: #e5eaee;
+    color: #9b9ead;
+    line-height: 38px;
+    padding: 0;
+    text-transform: uppercase;
+    width: 100%;
+    display: block;
+    text-align: center;
+    text-decoration: none;
+    border-radius: 3px;
+}
+
+
+.month-picker-month-table .ui-state-highlight{
+    background-color: #ffffff !important;
+    color: #67d3e0 !important;
+}
+.month-picker-month-table .ui-state-active{
+    background-color: #ffffff !important;
+    color: #67d3e0 !important;
+}
+
+
+
+.month-picker-open-button {
+    height: 20px;
+    width: 20px;
+    vertical-align: bottom
+}
+.month-picker-invalid-message {
+    display: none;
+    background-color: #ff0
+}
+.month-picker-disabled {
+    background-color: #e1e1e1
+}
+
+
+
+/* Colors Guide */
+
+.colors-guide-list {
+    list-style-type: none;
+    padding: 0 0 10px;
+    margin: 10px 0;
+}
+
+.colors-guide-list > li {
+    cursor: pointer;
+}
+
+.colors-guide-list .color-double {
+    position: absolute;
+    left: 0;
+    top: 2px;
+    width: 16px;
+    height: 16px;
+    -webkit-border-radius: 3px;
+    border-radius: 3px;
+    background: #b0e4fe;
+}
+.colors-guide-list .color-double>div {
+    height: 16px;
+    width: 50%;
+    -webkit-border-radius: 3px 0 0 3px;
+    border-radius: 3px 0 0 3px;
+    background: #62cafd
+}
+.colors-guide-list .color-double.fc-event-color1 {
+    background-color: #4fd8b0
+}
+.colors-guide-list .color-double.fc-event-color1>div {
+    background-color: #DCD5D5
+}
+.colors-guide-list .color-double.fc-event-color2 {
+    background-color: #c3d62d
+}
+.colors-guide-list .color-double.fc-event-color2>div {
+    background-color: #DCD5D5
+}
+.colors-guide-list .color-double.fc-event-color3 {
+    background-color: #67d3e0
+}
+.colors-guide-list .color-double.fc-event-color3>div {
+    background-color: #DCD5D5;
+}
+.colors-guide-list .color-double.fc-event-color4 {
+    background-color: #ff7022;
+}
+.colors-guide-list .color-double.fc-event-color4>div {
+    background-color: #DCD5D5;
+}
+.colors-guide-list .color-double.fc-event-color5 {
+    background-color: #ffbc0b;
+}
+.colors-guide-list .color-double.fc-event-color5>div {
+    background-color: #DCD5D5;
+}
+.colors-guide-list .color-double.fc-event-color6 {
+    background-color: #f5393d;
+}
+.colors-guide-list .color-double.fc-event-color6>div {
+    background-color: #DCD5D5;
+}
+.colors-guide-list .color-double.fc-event-color7 {
+    background-color: #5a5386;
+}
+.colors-guide-list .color-double.fc-event-color7>div {
+    background-color: #DCD5D5;
+}
+.colors-guide-list .color-double.fc-event-color8 {
+    background-color: #2a2f43;
+}
+.colors-guide-list .color-double.fc-event-color8>div {
+    background-color: #DCD5D5;
+}
+.colors-guide-list .color-double.fc-event-color9 {
+    background-color: #e5eaee;
+}
+.colors-guide-list .color-double.fc-event-color9>div {
+    background-color: #DCD5D5;
+}
+.colors-guide-list li {
+    position: relative;
+    padding: 0 0 10px 25px
+}
