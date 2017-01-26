@@ -7,7 +7,7 @@
         "events",
         "calendar"
     ],
-    "homepage": "https://github.com/krato/calendar",
+    "homepage": "https://github.com/Krato/Laravel-Calendar-System",
     "license": "MIT",
     "require": {
         "php": ">=5.5.9",
