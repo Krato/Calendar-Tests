@@ -2,12 +2,11 @@
 
 namespace Infinety\Calendar\Http\Requests;
 
-use App\Http\Requests\Request;
+use Illuminate\Http\Request;
 
 /**
- * Calendar events form request
+ * Calendar events form request.
  *
- * @package Todstoychev\CalendarEvents\Http\Requests
  * @author Eric Lagarda <eric@infinety.es>
  */
 class EventRequest extends Request
