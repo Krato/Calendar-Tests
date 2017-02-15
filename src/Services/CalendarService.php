@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Cache;
 use Infinety\Calendar\Engine\CalendarEngine;
 use Infinety\Calendar\Models;
+use App\Project;
 
 /**
  * Calendar events service
@@ -62,12 +63,14 @@ class CalendarService
         CalendarEngine $calendarEngine,
         Models\Events $events,
         Models\EventsModelsColor $eventsColors,
-        Cache $cache
+        Cache $cache,
+        Project $project
     ) {
         $this->calendarsEngine = $calendarEngine;
         $this->events = $events;
         $this->eventsColors = $eventsColors;
         $this->cache = $cache;
+        $this->project = $project;
         $this->cacheTimeToLive = $this->setCacheTimeToLive(config('calendar.cacheTime', 10));
     }
 
@@ -217,7 +220,6 @@ class CalendarService
     {
         $events = null;
         
-
         $startCompare = Carbon::parse($start);
         $endCompare = Carbon::parse($end);
 
@@ -228,14 +230,59 @@ class CalendarService
             if ($cache::tags('InfinetyCalendar')->has(self::ALL_EVENTS_KEY.$datesUnique)) {
                 return $cache::tags('InfinetyCalendar')->get(self::ALL_EVENTS_KEY.$datesUnique);
             }
-        }
-        
+        }       
 
-        $allEvents = $this->events->whereBetween('start', [$startCompare, $endCompare])
+        if(auth()) {
+            $allEvents = auth()->user()->getEvents($startCompare, $endCompare);
+        } else {
+            $allEvents = $this->events->whereBetween('start', [$startCompare, $endCompare])
                                   ->orWhereBetween('end', [$startCompare, $endCompare])
                                   ->orWhere('repeat_week', 1)
                                   ->get();
- 
+        }
+        
+        $events = [];
+        foreach ($allEvents as $event) {
+            $events[$event->id] = $event;
+        }
+
+        if($this->useCache()){
+            $this->storeCache(self::ALL_EVENTS_KEY.$datesUnique, $events);
+        }
+
+        return $events;
+    }
+
+    /**
+     * Gets all calendar events by dates
+     *
+     * @return \Illuminate\Database\Eloquent\Collection|null|static[]
+     */
+    public function getProjectEventsByDates($start, $end, $id)
+    {
+        $events = null;
+        
+        $startCompare = Carbon::parse($start);
+        $endCompare = Carbon::parse($end);
+
+        $datesUnique =  md5($start.$end);
+
+        if($this->useCache()){
+            $cache = $this->cache;
+            if ($cache::tags('InfinetyCalendar')->has(self::ALL_EVENTS_KEY.$datesUnique)) {
+                return $cache::tags('InfinetyCalendar')->get(self::ALL_EVENTS_KEY.$datesUnique);
+            }
+        }       
+
+        if(auth()) {
+            $allEvents = $this->project->getEvents($startCompare, $endCompare, $id);
+        } else {
+            $allEvents = $this->events->whereBetween('start', [$startCompare, $endCompare])
+                                  ->orWhereBetween('end', [$startCompare, $endCompare])
+                                  ->orWhere('repeat_week', 1)
+                                  ->get();
+        }
+        
         $events = [];
         foreach ($allEvents as $event) {
             $events[$event->id] = $event;
@@ -266,6 +313,7 @@ class CalendarService
         
 
         $allEvents = $this->calendarsEngine->formatEventsToJson($this->getAllEventsByDates($start, $end), $start, $end);
+
         $allEventsToJson = json_encode($allEvents);
 
         if($this->useCache()){
@@ -273,7 +321,34 @@ class CalendarService
         }
 
         return $allEventsToJson;
+    }
 
+    /**
+     * Get all events JSON
+     *
+     * @return string
+     */
+    public function getProjectEventsAsJson($start, $end, $id)
+    {
+
+        $datesUnique =  md5($start.$end);
+        if($this->useCache()){
+            $cache = $this->cache;
+            if ($cache::tags('InfinetyCalendar')->has(self::ALL_EVENTS_TO_JSON_KEY.$datesUnique)) {
+                return $cache::tags('InfinetyCalendar')->get(self::ALL_EVENTS_TO_JSON_KEY.$datesUnique);
+            }
+        }
+        
+
+        $allEvents = $this->calendarsEngine->formatEventsToJson($this->getProjectEventsByDates($start, $end, $id), $start, $end);
+
+        $allEventsToJson = json_encode($allEvents);
+
+        if($this->useCache()){
+            $this->storeCache(self::ALL_EVENTS_TO_JSON_KEY.$datesUnique, $allEventsToJson);
+        }
+
+        return $allEventsToJson;
     }
 
     /**
