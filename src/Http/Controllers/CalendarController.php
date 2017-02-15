@@ -5,8 +5,9 @@ namespace Infinety\Calendar\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Infinety\Calendar\Http\Requests\EventRequest;
-use Infinety\Calendar\Services\CalendarService;
 use Infinety\Calendar\Models\EventsModelsColor;
+use Infinety\Calendar\Models\Events;
+use Infinety\Calendar\Services\CalendarService;
 
 class CalendarController extends Controller
 {
@@ -27,7 +28,7 @@ class CalendarController extends Controller
     public function index()
     {
         $colorModel = new EventsModelsColor();
-        $modelData = app(config('calendar.modelBind'))->get();
+        $modelData = auth()->user()->getFilters();
         $modelColumn = config('calendar.modelColumn', 'name');
 
         return $this->firstViewThatExists('vendor/infinety/calendar/index', 'calendar.index', compact('modelData', 'modelColumn', 'colorModel'));
@@ -72,6 +73,10 @@ class CalendarController extends Controller
      */
     public function modelPost(Request $request)
     {
+        $color = EventsModelsColor::where('model_id', $request->model_id)->first();
+        if(isset($color)){
+            $color->delete();
+        }
         $this->calendarService->createModelColor($request->input());
 
         return redirect()->to('calendar/model');
@@ -100,11 +105,53 @@ class CalendarController extends Controller
      */
     public function postAdd(EventRequest $request)
     {
-        dump($request);
-        dd();
         $this->calendarService->createEvent($request->all());
 
-        return redirect()->to('calendar');
+        return json_encode(true);
+    }
+
+    /**
+     * Saves a edited event.
+     * @param  EventRequest $request [description]
+     * @return [type]                [description]
+     */
+    public function editPost(EventRequest $request)
+    {
+        $event = Events::where('id', $request->id)->first();
+        $event->title = $request->title;
+        $event->description = $request->description;
+        
+        if($request->all_day == true)
+        {
+            $event->all_day = 1;
+        } else {
+            $event->all_day = 0;
+        }
+
+        $event->start = $request->start;
+
+        if(empty($request->end))
+        {
+        $event->end = null;
+        } else { 
+        $event->end = $request->end;
+        }
+
+        $event->save();
+        
+        return redirect()->back();
+    }
+
+    public function deletePost($id)
+    {
+        $event = Events::where('id', $id)->first();
+        
+        if(count($event) > 0){ $event->delete(); }    
+    }
+
+    public function getEvent($id)
+    {
+        return $this->calendarService->getCalendar($id);
     }
 
     /**

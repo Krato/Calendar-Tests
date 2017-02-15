@@ -6,7 +6,7 @@
 @section('content')
 	<div class="container">
 		@if( view()->exists('vendor.infinety.calendar.form') )
-			@include('vendor.infinety.calendar.form');
+			@include('vendor.infinety.calendar.form')
 		@else
 			@include('calendar:calendar.form')
 		@endif

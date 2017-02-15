@@ -36,7 +36,6 @@ class EventsModelsColor extends Model
         return $events;
     }
 
-
     /**
      * Check if ModelId has Color saved and returns color
      *

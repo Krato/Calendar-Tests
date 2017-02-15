@@ -24,7 +24,7 @@
         <div class="row">
             <div class="col-md-10">
                 <div class="form-group ">
-                    <label for="class">Clase</label>
+                    <label for="class">Color</label>
                     <select name="color" id="color" class="form-control" onchange="CalendarEvents.changeClassColor()">
                         @for ($i = 1; $i < 10; $i++)
                             <option value="fc-event-color{{$i}}" {{ ($colorModel->getColor($model->id) == 'fc-event-color'.$i) ? 'selected' : '' }}>Color {{ $i }}</option>

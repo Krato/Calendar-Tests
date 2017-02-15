@@ -4,6 +4,7 @@ namespace Infinety\Calendar\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Infinety\Calendar\Models\EventsModelsColor;
+use Carbon\Carbon;
 
 /**
  * Calendar event model
@@ -33,6 +34,19 @@ class Events extends Model
         'model_id'
     ];
 
+    /**
+     * The attributes that should be mutated to dates.
+     *
+     * @var array
+     */
+    protected $dates = [
+        'start',
+        'end',
+        'created_at',
+        'updated_at'
+    ];
+
+
     function color(){
         if($this->model_id != null){
             $eventsModelsColor = new EventsModelsColor;
@@ -40,6 +54,18 @@ class Events extends Model
         } else {
             return null;
         }
-        
+    }
+    public function getStartHumansAttribute()
+    {
+        return $this->start->diffForHumans();
+    }
+    public function getEndHumansAttribute()
+    {
+        if($this->end == Null)
+        {
+            return 'No end date';
+        } else {
+        return $this->end->diffForHumans();
+        }
     }
 }
