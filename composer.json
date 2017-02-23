@@ -38,9 +38,8 @@
     },
     "extra": {
         "branch-alias": {
-            "intranet": "0.5"
+            "intranet": "0.6"
         }
     }
-
 
 }

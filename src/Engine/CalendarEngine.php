@@ -39,6 +39,8 @@ class CalendarEngine
         $start = strtotime($data['start']);
         $start = date('Y-m-d H:i:s', $start);
         $end = null;
+        $repeat_event_end = null;
+
         $repeat_week = 0;
 
         if (array_key_exists('end', $data)) {
@@ -53,6 +55,11 @@ class CalendarEngine
             $repeat_week = 1;
         }
 
+        if (array_key_exists('repeat-end', $data)) {
+            $repeat_event_end = strtotime($data['repeat-end']);
+            $repeat_event_end = date('Y-m-d H:i:s', $repeat_event_end);
+        }
+
         $event = [
             'title' => $data['title'],
             'description' => $data['description'],
@@ -61,6 +68,7 @@ class CalendarEngine
             'all_day' => array_key_exists('all_day', $data),
             'repeat_week' => $repeat_week,
             'model_id' => ($data['model_id'] != '') ?  $data['model_id'] : null,
+            'repeat_event_end' => $repeat_event_end,
         ];
 
         return $event;
@@ -93,7 +101,10 @@ class CalendarEngine
     {
         $array = [];
 
+
+
         foreach ($calendarEvents as $event) {
+
             if ($event->repeat_week == false) {
                 $startEvent = $this->carbon
                     ->copy()
@@ -131,7 +142,9 @@ class CalendarEngine
                 $startInitialEvent = $this->carbon->copy()->parse($event->start);
                 $endEventDate = $this->carbon->copy()->parse($event->repeat_event_end);
 
+
                 $datesRange = $this->generateDateRange($startCheck, $endCheck, ($event->repeat_event_end != null) ? $endEventDate : null,  $startInitialEvent->dayOfWeek);
+
 
                 $className = null;
                 if ($event->color() != '') {
@@ -140,7 +153,6 @@ class CalendarEngine
                     $className = ($event->class != null) ? $event->class : null;
                 }
 
-                    // dd();
                     foreach ($datesRange as $dt) {
                         $startEvent = $this->carbon->copy()->parse($dt)->toIso8601String();
                         $endEvent = $this->carbon
@@ -170,6 +182,7 @@ class CalendarEngine
             }
         }
 
+
         return $array;
     }
 
@@ -182,7 +195,7 @@ class CalendarEngine
      *
      * @return array
      */
-    private function generateDateRange(Carbon $start_date, Carbon $end_date, $finalEventDate, $weekDay = false)
+    private function generateDateRange(Carbon $start_date, Carbon $end_date, $finalEventDate, $weekDay = null)
     {
         $dates = [];
         $end_date->addDay();
@@ -190,18 +203,22 @@ class CalendarEngine
         $start_date = Carbon::parse($start_date->toDateString());
         $end_date = Carbon::parse($end_date->toDateString());
 
+
         // dump("-----------------");
         // dump("New Event");
         // dump("Fecha Inicio: ".$start_date);
         // dump("Fecha Fin: ".$end_date);
         // dump("Fecha Máxima: ".$finalEventDate);
-        for ($date = $start_date; $date->lte($end_date); $date->addDay()) {
+        // dd();
+        $date = $start_date;
+        for ($date; $date->lte($end_date); $date->addDay()) {
             if ($finalEventDate == null || $finalEventDate->lt($date) == false) {
-                if ($weekDay == false || $date->dayOfWeek == $weekDay) {
+                if ($weekDay !== null && $date->dayOfWeek == $weekDay) {
                     $dates[] = $date->copy();
                 }
             }
         }
+        
         // dump($dates);
         return $dates;
     }

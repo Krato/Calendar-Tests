@@ -53,6 +53,10 @@ class EventRequest extends FormRequest
             $rules['end'] = 'required';
         }
 
+        if (!empty($this->input('repeat'))) {
+            $rules['repeat-end'] = 'required';
+        }
+
         return $rules;
     }
 }

@@ -471,29 +471,41 @@ class CalendarService
      * @param  array  $data
      */
     public function updateDragEventRepeatedAll($id, array $data){
+
+
             $event = $this->events->find($id);
             $eventStart = Carbon::parse($event->start);
             $eventEnd = Carbon::parse($event->end);
 
             $startDateGiven = Carbon::parse($data['event-id-moved-day-start']);
-            $endDateGiven = Carbon::parse($data['event-id-moved-day-end']);
 
-            $newEventStart = Carbon::parse($event->start)->startOfWeek()->next($startDateGiven->dayOfWeek);
+            if($data["event-id-moved-day-end"] != "") {
+                $endDateGiven = Carbon::parse($data['event-id-moved-day-end']);
+
+                $newEventEnd = Carbon::parse($endDateGiven)->startOfWeek()->next($endDateGiven->dayOfWeek);
+                $newEventEnd->hour = $eventEnd->hour;
+                $newEventEnd->minute = $eventEnd->minute;
+
+                $eventRepeatedEnd = Carbon::parse($event->repeat_event_end);
+                $eventRepeatedEnd->hour = $eventEnd->hour;
+                $eventRepeatedEnd->minute = $eventEnd->minute;
+
+
+                $event->end = $newEventEnd->toDateTimeString();
+                $endDateOfEvent = $endDateGiven->toDateTimeString();
+                $event->repeat_event_end = $eventRepeatedEnd->toDateTimeString();
+
+            }
+
+            
+            $newEventStart = Carbon::parse($startDateGiven);
             $newEventStart->hour = $eventStart->hour;
             $newEventStart->minute = $eventEnd->minute;
 
-            $newEventEnd = Carbon::parse($event->end)->startOfWeek()->next($endDateGiven->dayOfWeek);
-            $newEventEnd->hour = $eventEnd->hour;
-            $newEventEnd->minute = $eventEnd->minute;
-
-            $eventRepeatedEnd = Carbon::parse($event->repeat_event_end)->startOfWeek()->next($endDateGiven->dayOfWeek);
-            $eventRepeatedEnd->hour = $eventEnd->hour;
-            $eventRepeatedEnd->minute = $eventEnd->minute;
-
-            $endDateOfEvent = $endDateGiven->toDateTimeString();
+            
             $event->start = $newEventStart->toDateTimeString();
-            $event->end = $newEventEnd->toDateTimeString();
-            $event->repeat_event_end = $eventRepeatedEnd->toDateTimeString();
+            
+            
             $event->save();
     }
 
