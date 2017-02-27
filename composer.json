@@ -35,11 +35,5 @@
         "psr-4": {
             "Infinety\\Calendar\\Tests\\": "tests/"
         }
-    },
-    "extra": {
-        "branch-alias": {
-            "intranet-dev": "0.6"
-        }
     }
-
 }
